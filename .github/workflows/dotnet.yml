@@ -21,7 +21,9 @@ jobs:
       run: dotnet workload install maui
 
     - name: 還原專案依賴
-      run: dotnet restore
+    # run: dotnet restore
+      run: dotnet restore Sheas-Cealer-Droid.csproj
 
     - name: 建置 MAUI Android
-      run: dotnet build -c Release -f net9.0-android # 請對應您的 Target Framework
+    # run: dotnet build -c Release -f net9.0-android # 請對應您的 Target Framework
+      run: dotnet build -c Release Sheas-Cealer-Droid.csproj

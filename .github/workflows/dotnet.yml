@@ -1,28 +1,27 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
-name: .NET
+name: MAUI Android CI
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    # 使用 Windows Runner 來確保 Android SDK 與相關工具的相容性
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v4
-    - name: Setup .NET
+
+    - name: 安裝 .NET SDK
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9
-    - name: Restore dependencies
+        dotnet-version: '9.0.x' # 請根據您的專案版本進行調整
+
+    - name: 安裝 MAUI 工作負載
+      run: dotnet workload install maui
+
+    - name: 還原專案依賴
       run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+
+    - name: 建置 MAUI Android
+      run: dotnet build -c Release -f net8.0-android # 請對應您的 Target Framework

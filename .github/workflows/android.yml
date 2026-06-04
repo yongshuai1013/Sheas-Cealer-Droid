@@ -1,0 +1,36 @@
+name: Build MAUI Android APK
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: windows-2025-vs2026
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET Core SDK (9.x)
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Install MAUI workload
+      run: dotnet workload install maui-android
+
+    - name: Restore dependencies
+      run: dotnet restore Sheas-Cealer-Droid.csproj
+
+    - name: Build MAUI Android APK
+      run: dotnet publish Sheas-Cealer-Droid.csproj -c Release -f:net9.0-android /p:AndroidPackageFormat=apk
+
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: maui-apk
+        path: |
+          **/bin/Release/net9.0-android/publish/*.apk
